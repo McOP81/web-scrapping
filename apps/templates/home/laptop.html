@@ -1,7 +1,82 @@
-{% extends 'layouts/base.html' %}
-{% block title %} Laptops {% endblock title %}
+{% extends 'layouts/base.html' %} 
+{% block title %} Laptop {% endblock title%}
+
+{% block stylesheets %}
+<style>
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    .product-item {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        width: calc(100% - 20px); /* Par défaut, une colonne sur les petits écrans */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+    .product-item img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+    .product-item h3 {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    .product-item p {
+        font-size: 14px;
+        color: #555;
+    }
+    .product-item .price {
+        font-size: 20px;
+        color: #333;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    .product-item .color {
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* Styles pour les produits recommandés */
+    #recommendedProducts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; /* Espace entre les produits */
+    }
+
+    #recommendedProducts .product-item {
+        flex: 1 1 calc(100% - 20px); /* Par défaut, une colonne sur les petits écrans */
+        max-width: calc(100% - 20px);
+    }
+
+    /* Media queries pour les écrans moyens et grands */
+    @media (min-width: 768px) {
+        .product-item {
+            width: calc(50% - 20px); /* Deux colonnes sur les tablettes */
+        }
+        #recommendedProducts .product-item {
+            flex: 1 1 calc(50% - 20px); /* Deux colonnes sur les tablettes */
+            max-width: calc(50% - 20px);
+        }
+    }
+
+    @media (min-width: 992px) {
+        .product-item {
+            width: calc(25% - 20px); /* Quatre colonnes sur les ordinateurs */
+        }
+        #recommendedProducts .product-item {
+            flex: 1 1 calc(33.33% - 20px); /* Trois colonnes sur les ordinateurs */
+            max-width: calc(33.33% - 20px);
+        }
+    }
+</style>
+{% endblock stylesheets %} 
 
 {% block content %}
+
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
     <div class="header-body">
@@ -18,17 +93,17 @@
     </div>
     <div class="card-body">
       <div id="items-container" class="product-list">
-        {% for laptop in laptops %}
-        <div class="product-item item" data-product-id="{{ laptop.id }}">
-          <img src="{{ laptop.image_url }}" alt="{{ laptop.produit }}">
-          <h3>{{ laptop.produit }}</h3>
-          <p>{{ laptop.caracteristiques.Brand }}</p>
-          <div class="price">{{ laptop.prix }}</div>
-          <div class="color">{{ laptop.caracteristiques.Color }}</div>
-        </div>
-        {% endfor %}
-      </div>
+          {% for laptop in laptops %}
+          <div class="product-item item" data-product-id="{{ laptop.id }}">
+            <img src="{{ laptop.image_url }}" alt="{{ laptop.produit }}" style="max-width: 200px; max-height: 200px;">
+            <h3>{{ laptop.produit }}</h3>
+            <p>{{ laptop.caracteristiques.Brand }}</p>
+            <div class="price">{{ laptop.prix }}</div>
+            <div class="color">{{ laptop.caracteristiques.Color }}</div>
+          </div>
+          {% endfor %}
 
+      </div>
       <nav aria-label="Page navigation">
         <ul id="pagination" class="pagination justify-content-center mt-4">
         </ul>
@@ -36,4 +111,223 @@
     </div>
   </div>
 </div>
+
+<!-- Modal pour afficher les détails du produit -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailsModalLabel">Détails du produit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <img src="/static/assets/img/theme/img-1-1000x600.jpg" alt="Product Image" class="img-fluid">
+          </div>
+          <div class="col-md-6">
+            <h2 id="productTitle">Basic Starter Pack</h2>
+            <p id="productDescription">The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out.</p>
+            <div class="price" id="productPrice">$399</div>
+            <div class="reviews">
+              <span>*****</span>
+              <span id="productReviews">117 reviews</span>
+            </div>
+            <div class="sizes">
+              <h4>Size</h4>
+              <div class="size-buttons">
+                <button class="btn btn-outline-secondary">XS</button>
+                <button class="btn btn-outline-secondary">S</button>
+                <button class="btn btn-outline-secondary">M</button>
+                <button class="btn btn-outline-secondary">L</button>
+                <button class="btn btn-outline-secondary">XL</button>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block mt-3">Add to cart</button>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <h4>Product Description</h4>
+            <p id="productFullDescription">There's nothing I really wanted to do in life that I wasn't able to get good at. That's my skill. I'm not really specifically talented at anything except for the ability to learn. That's what I do. That's what I'm here for. Don't be afraid to be wrong because you can't learn anything from a compliment.</p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <h4>Benefits</h4>
+            <ul id="productBenefits">
+              <li>Oil is a primary source of energy for various sectors, including transportation, industries, and residential use.</li>
+              <li>Oil is highly versatile and used in the production of a wide range of products. It serves as a raw material for manufacturing plastics.</li>
+              <li>Oil is a crucial source of petrochemicals, which are used in the production of plastics.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <h4>Recommended Products</h4>
+            <div id="recommendedProducts" class="row"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
+
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  $(document).ready(function () {
+    const itemsPerPage = 8;
+
+    const $items = $('.item');
+    const totalItems = $items.length;
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    function showPage(page) {
+      $items.hide(); 
+      $items.slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
+    }
+
+    // Fonction pour générer les boutons de pagination
+    function generatePagination() {
+      const $pagination = $('#pagination');
+      $pagination.empty(); // Vider la pagination existante
+
+      // Ajouter un bouton "Précédent"
+      $pagination.append(`
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous" id="prev-page">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      `);
+
+      // Ajouter les boutons pour chaque page
+      for (let i = 1; i <= totalPages; i++) {
+        $pagination.append(`
+          <li class="page-item">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+          </li>
+        `);
+      }
+
+      // Ajouter un bouton "Suivant"
+      $pagination.append(`
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next" id="next-page">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      `);
+
+      // Gérer les clics sur les boutons de pagination
+      $pagination.find('a').on('click', function (e) {
+        e.preventDefault();
+        const $this = $(this);
+
+        if ($this.attr('id') === 'prev-page') {
+          const currentPage = $pagination.find('.active').data('page') || 1;
+          if (currentPage > 1) {
+            showPage(currentPage - 1);
+            updatePagination(currentPage - 1);
+          }
+        } else if ($this.attr('id') === 'next-page') {
+          const currentPage = $pagination.find('.active').data('page') || 1;
+          if (currentPage < totalPages) {
+            showPage(currentPage + 1);
+            updatePagination(currentPage + 1);
+          }
+        } else {
+          const page = $this.data('page');
+          showPage(page);
+          updatePagination(page);
+        }
+      });
+    }
+
+    // Fonction pour mettre à jour l'état actif de la pagination
+    function updatePagination(page) {
+      $('#pagination .page-item').removeClass('active');
+      $(`#pagination a[data-page="${page}"]`).parent().addClass('active');
+    }
+
+    // Fonction pour sélectionner des produits aléatoires
+    function getRandomProducts(excludeId, count) {
+      const products = $items.toArray().filter(item => $(item).data('product-id') !== excludeId);
+      const shuffled = products.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+
+    // Gérer les clics sur les produits pour afficher les détails
+    $('.product-item').on('click', function () {
+      const productId = $(this).data('product-id'); 
+      loadProductDetails(productId); 
+      $('#productDetailsModal').modal('show'); 
+    });
+
+    // Fonction pour charger les détails du produit (simulé ici)
+    function loadProductDetails(productId) {
+      const productDetails = {
+        title: "Basic Starter Pack",
+        description: "The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out.",
+        price: "$399",
+        reviews: "117 reviews",
+        fullDescription: "There's nothing I really wanted to do in life that I wasn't able to get good at. That's my skill. I'm not really specifically talented at anything except for the ability to learn. That's what I do. That's what I'm here for. Don't be afraid to be wrong because you can't learn anything from a compliment.",
+        benefits: [
+          "Oil is a primary source of energy for various sectors, including transportation, industries, and residential use.",
+          "Oil is highly versatile and used in the production of a wide range of products. It serves as a raw material for manufacturing plastics.",
+          "Oil is a crucial source of petrochemicals, which are used in the production of plastics."
+        ],
+        moreInfo: "There's nothing I really wanted to do in life that I wasn't able to get good at. That's my skill. I'm not really specifically talented at anything except for the ability to learn."
+      };
+
+      // Mettre à jour le contenu de la modal
+      $('#productTitle').text(productDetails.title);
+      $('#productDescription').text(productDetails.description);
+      $('#productPrice').text(productDetails.price);
+      $('#productReviews').text(productDetails.reviews);
+      $('#productFullDescription').text(productDetails.fullDescription);
+      $('#productMoreInfo').text(productDetails.moreInfo);
+
+      // Mettre à jour la liste des avantages
+      const $benefitsList = $('#productBenefits');
+      $benefitsList.empty();
+      productDetails.benefits.forEach(benefit => {
+        $benefitsList.append(`<li>${benefit}</li>`);
+      });
+
+      // Afficher des produits recommandés aléatoires
+      const randomProducts = getRandomProducts(productId, 3);
+      const $recommendedProducts = $('#recommendedProducts');
+      $recommendedProducts.empty();
+      randomProducts.forEach(product => {
+        const $product = $(product);
+        $recommendedProducts.append(`
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="product-item">
+              <img src="${$product.find('img').attr('src')}" alt="${$product.find('h3').text()}" class="img-fluid">
+              <h3>${$product.find('h3').text()}</h3>
+              <div class="price">${$product.find('.price').text()}</div>
+              <div class="color">${$product.find('.color').text()}</div>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    // Initialisation
+    showPage(1); // Afficher la première page
+    generatePagination(); // Générer les boutons de pagination
+    updatePagination(1); // Activer le premier bouton
+  });
+</script>
+{% endblock javascripts %} 

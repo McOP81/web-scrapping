@@ -2,38 +2,33 @@
   <div class="container-fluid">
 
 
-    <!-- Liens de navigation centrés -->
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
       <ul class="navbar-nav">
-        <!-- Élément SmartPhone -->
         <li class="nav-item">
-          <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="/">
+          <a class="nav-link {% if segment == 'index' %} active {% endif %}" href="/">
             <span class="nav-link-text">SmartPhone</span>
           </a>
+        
         </li>
 
-        <!-- Élément Laptop -->
         <li class="nav-item">
-          <a class="nav-link {% if 'laptop' in segment %} active {% endif %}" href="/laptop.html">
+          <a class="nav-link {% if segment == 'laptop_list' %} active {% endif %}" href="/laptop.html">
             <span class="nav-link-text">Laptop</span>
           </a>
         </li>
       </ul>
     </div>
 
-    <!-- Panier (aligné à droite) -->
     <ul class="navbar-nav align-items-center ml-auto">
       <li class="nav-item dropdown">
         <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="ni ni-cart"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
-          <!-- En-tête du dropdown -->
           <div class="px-3 py-3">
             <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">13</strong> notifications.</h6>
           </div>
 
-          <!-- Liste des notifications -->
           <div class="list-group list-group-flush">
             <a href="#!" class="list-group-item list-group-item-action">
               <div class="row align-items-center">
@@ -55,7 +50,6 @@
             </a>
           </div>
 
-          <!-- Lien "Voir tout" -->
           <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
         </div>
       </li>

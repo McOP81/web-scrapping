@@ -11,12 +11,8 @@ urlpatterns = [
 
     # The home page
     path('', views.index, name='home'),
-    # path('home/index.html', views.smartphone_list, name='smartphone_list'),
 
     # Route pour la liste des laptops
-    path('home/laptops.html', views.laptop_list, name='laptop_list'),
-
-    # Matches any html file
-    re_path(r'^.*\.*', views.pages, name='pages'),
+    path('laptop.html', views.laptop_list, name='laptop_list'),
 
 ]

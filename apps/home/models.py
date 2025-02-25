@@ -15,6 +15,14 @@ class CaracteristiquesLaptop(models.Model):
     Hard_Disk_Size = models.CharField(max_length=50)
     CPU_Model = models.CharField(max_length=50)
     Ram_Memory_Installed_Size = models.CharField(max_length=50)
+    Speaker_Maximum_Output_Power = models.CharField(max_length=50)
+    Connectivity_Technology = models.CharField(max_length=50)
+    Audio_Output_Mode = models.CharField(max_length=50)
+    Mounting_Type = models.CharField(max_length=50)
+    Connector_Type = models.CharField(max_length=50)
+    Compatible_Devices = models.CharField(max_length=50)
+    Compatible_Phone_Models = models.CharField(max_length=50)
+    Mounting_Type = models.CharField(max_length=50)
 
     class Meta:
         abstract = True
@@ -52,11 +60,13 @@ class CaracteristiquesSmartphone(models.Model):
     Customer_Reviews = models.TextField(blank=True)
     Best_Sellers_Rank = models.TextField(blank=True)
     OS = models.CharField(max_length=50)
+    Wireless_communication_technologies = models.CharField(max_length=50, blank=True)  
     Connectivity_technologies = models.CharField(max_length=100)
     GPS = models.CharField(max_length=10)
     Special_features = models.TextField(blank=True)
     Other_display_features = models.CharField(max_length=100, blank=True)
     Human_Interface_Input = models.TextField(blank=True)
+    Scanner_Resolution = models.CharField(max_length=200, blank=True) 
     Other_camera_features = models.CharField(max_length=100, blank=True)
     Audio_Jack = models.CharField(max_length=50, blank=True)
     Form_Factor = models.CharField(max_length=50, blank=True)
@@ -70,6 +80,11 @@ class CaracteristiquesSmartphone(models.Model):
     Standing_screen_display_size = models.CharField(max_length=50)
     Ram_Memory_Installed_Size = models.CharField(max_length=50)
     Weight = models.CharField(max_length=50)
+    Battery_Capacity = models.CharField(max_length=50, blank=True) 
+    Package_Dimensions = models.CharField(max_length=50, blank=True)  
+    RAM = models.CharField(max_length=50, blank=True)  
+    Phone_Talk_Time = models.CharField(max_length=50, blank=True)  
+
 
     class Meta:
         abstract = True
