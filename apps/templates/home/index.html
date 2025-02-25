@@ -1,5 +1,5 @@
-{% extends 'layouts/base.html' %} 
-{% block title %} index {% endblock title%}
+{% extends 'layouts/base.html' %}
+{% block title %} Index {% endblock title %}
 
 {% block stylesheets %}
 <style>
@@ -40,26 +40,10 @@
         color: #777;
     }
 
-    /* Styles pour les produits recommandés */
-    #recommendedProducts {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px; /* Espace entre les produits */
-    }
-
-    #recommendedProducts .product-item {
-        flex: 1 1 calc(100% - 20px); /* Par défaut, une colonne sur les petits écrans */
-        max-width: calc(100% - 20px);
-    }
-
     /* Media queries pour les écrans moyens et grands */
     @media (min-width: 768px) {
         .product-item {
             width: calc(50% - 20px); /* Deux colonnes sur les tablettes */
-        }
-        #recommendedProducts .product-item {
-            flex: 1 1 calc(50% - 20px); /* Deux colonnes sur les tablettes */
-            max-width: calc(50% - 20px);
         }
     }
 
@@ -67,13 +51,14 @@
         .product-item {
             width: calc(25% - 20px); /* Quatre colonnes sur les ordinateurs */
         }
-        #recommendedProducts .product-item {
-            flex: 1 1 calc(33.33% - 20px); /* Trois colonnes sur les ordinateurs */
-            max-width: calc(33.33% - 20px);
-        }
+    }
+
+    /* Styles pour les produits recommandés */
+    #recommendedProducts .product-item {
+        width: 100%; /* Une colonne pour les produits recommandés */
     }
 </style>
-{% endblock stylesheets %} 
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -94,15 +79,20 @@
     <div class="card-body">
       <div id="items-container" class="product-list">
           {% for smartphone in smartphones %}
-          <div class="product-item item" data-product-id="{{ smartphone.id }}">
+          <div class="product-item item" data-product-id="{{ smartphone.caracteristiques.ASIN }}"
+               data-os="{{ smartphone.caracteristiques.OS }}"
+               data-battery-capacity="{{ smartphone.caracteristiques.Battery_Capacity }}"
+               data-ram="{{ smartphone.caracteristiques.Ram_Memory_Installed_Size }}"
+               data-storage="{{ smartphone.caracteristiques.Memory_Storage_Capacity }}"
+               data-color="{{ smartphone.caracteristiques.Color }}"
+               data-brand="{{ smartphone.caracteristiques.Brand }}">
             <img src="{{ smartphone.image_url }}" alt="{{ smartphone.produit }}" style="max-width: 200px; max-height: 200px;">
             <h3>{{ smartphone.produit }}</h3>
-            <p>{{ smartphone.caracteristiques.Brand }}</p>
+            <p>{{ smartphone.caracteristiques.OS }}</p>
             <div class="price">{{ smartphone.prix }}</div>
             <div class="color">{{ smartphone.caracteristiques.Color }}</div>
           </div>
           {% endfor %}
-
       </div>
 
       <nav aria-label="Page navigation">
@@ -126,24 +116,23 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-md-6">
-            <img src="/static/assets/img/theme/img-1-1000x600.jpg" alt="Product Image" class="img-fluid">
+            <img id="productImage" src="" alt="Product Image" class="img-fluid">
           </div>
           <div class="col-md-6">
             <h2 id="productTitle">Basic Starter Pack</h2>
             <p id="productDescription">The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out.</p>
             <div class="price" id="productPrice">$399</div>
+            <div class="color" id="productColor">Black</div>
             <div class="reviews">
               <span>*****</span>
               <span id="productReviews">117 reviews</span>
             </div>
             <div class="sizes">
-              <h4>Size</h4>
-              <div class="size-buttons">
-                <button class="btn btn-outline-secondary">XS</button>
-                <button class="btn btn-outline-secondary">S</button>
-                <button class="btn btn-outline-secondary">M</button>
-                <button class="btn btn-outline-secondary">L</button>
-                <button class="btn btn-outline-secondary">XL</button>
+              <h4>Quantite</h4>
+              <div class="quantity-selector d-flex align-items-center">
+                <button class="btn btn-outline-secondary decrement">−</button>
+                <span class="quantity mx-2">1</span>
+                <button class="btn btn-outline-secondary increment">+</button>
               </div>
             </div>
             <button class="btn btn-primary btn-block mt-3">Add to cart</button>
@@ -151,17 +140,13 @@
         </div>
         <div class="row mt-4">
           <div class="col-md-12">
-            <h4>Product Description</h4>
-            <p id="productFullDescription">There's nothing I really wanted to do in life that I wasn't able to get good at. That's my skill. I'm not really specifically talented at anything except for the ability to learn. That's what I do. That's what I'm here for. Don't be afraid to be wrong because you can't learn anything from a compliment.</p>
-          </div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-md-12">
-            <h4>Benefits</h4>
-            <ul id="productBenefits">
-              <li>Oil is a primary source of energy for various sectors, including transportation, industries, and residential use.</li>
-              <li>Oil is highly versatile and used in the production of a wide range of products. It serves as a raw material for manufacturing plastics.</li>
-              <li>Oil is a crucial source of petrochemicals, which are used in the production of plastics.</li>
+            <h4>Caractéristiques</h4>
+            <ul id="productCaracteristiques">
+              <li><strong>OS:</strong> <span id="productOS"></span></li>
+              <li><strong>Battery Capacity:</strong> <span id="productBatteryCapacity"></span></li>
+              <li><strong>RAM:</strong> <span id="productRAM"></span></li>
+              <li><strong>Storage:</strong> <span id="productStorage"></span></li>
+              <li><strong>Brand:</strong> <span id="productBrand"></span></li>
             </ul>
           </div>
         </div>
@@ -275,59 +260,97 @@
       $('#productDetailsModal').modal('show');
     });
 
-    // Fonction pour charger les détails du produit (simulé ici)
-    function loadProductDetails(productId) {
-      const productDetails = {
-        title: "Basic Starter Pack",
-        description: "The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out.",
-        price: "$399",
-        reviews: "117 reviews",
-        fullDescription: "There's nothing I really wanted to do in life that I wasn't able to get good at. That's my skill. I'm not really specifically talented at anything except for the ability to learn. That's what I do. That's what I'm here for. Don't be afraid to be wrong because you can't learn anything from a compliment.",
-        benefits: [
-          "Oil is a primary source of energy for various sectors, including transportation, industries, and residential use.",
-          "Oil is highly versatile and used in the production of a wide range of products. It serves as a raw material for manufacturing plastics.",
-          "Oil is a crucial source of petrochemicals, which are used in the production of plastics."
-        ],
-        moreInfo: "There's nothing I really wanted to do in life that I wasn't able to get good at. That's my skill. I'm not really specifically talented at anything except for the ability to learn."
-      };
+    // Fonction pour charger les détails du produit
+  function loadProductDetails(productId) {
+    const $selectedProduct = $(`.product-item[data-product-id="${productId}"]`);
 
-      // Mettre à jour le contenu de la modal
-      $('#productTitle').text(productDetails.title);
-      $('#productDescription').text(productDetails.description);
-      $('#productPrice').text(productDetails.price);
-      $('#productReviews').text(productDetails.reviews);
-      $('#productFullDescription').text(productDetails.fullDescription);
-      $('#productMoreInfo').text(productDetails.moreInfo);
+    const productDetails = {
+      title: $selectedProduct.find('h3').text(),
+      description: $selectedProduct.find('p').text(),
+      price: $selectedProduct.find('.price').text(),
+      color: $selectedProduct.find('.color').text(),
+      imageUrl: $selectedProduct.find('img').attr('src'),
+      caracteristiques: {
+        OS: $selectedProduct.data('os'),
+        Battery_Capacity: $selectedProduct.data('battery-capacity'),
+        RAM: $selectedProduct.data('ram'),
+        Storage: $selectedProduct.data('storage'),
+        Brand: $selectedProduct.data('brand'),
+      }
+    };
 
-      // Mettre à jour la liste des avantages
-      const $benefitsList = $('#productBenefits');
-      $benefitsList.empty();
-      productDetails.benefits.forEach(benefit => {
-        $benefitsList.append(`<li>${benefit}</li>`);
-      });
+    // Mettre à jour le contenu de la modal
+    $('#productTitle').text(productDetails.title);
+    $('#productDescription').text(productDetails.description);
+    $('#productPrice').text(productDetails.price);
+    $('#productColor').text(productDetails.color);
+    $('#productImage').attr('src', productDetails.imageUrl);
 
-      // Afficher des produits recommandés aléatoires
-      const randomProducts = getRandomProducts(productId, 3);
-      const $recommendedProducts = $('#recommendedProducts');
-      $recommendedProducts.empty();
-      randomProducts.forEach(product => {
-        const $product = $(product);
+    // Afficher les caractéristiques spécifiques
+    $('#productOS').text(productDetails.caracteristiques.OS);
+    $('#productBatteryCapacity').text(productDetails.caracteristiques.Battery_Capacity);
+    $('#productRAM').text(productDetails.caracteristiques.RAM);
+    $('#productStorage').text(productDetails.caracteristiques.Storage);
+    $('#productBrand').text(productDetails.caracteristiques.Brand);
+
+    // Afficher des produits recommandés aléatoires
+    const randomProducts = getRandomProducts(productId, 3);
+    const $recommendedProducts = $('#recommendedProducts');
+    $recommendedProducts.empty();
+
+    randomProducts.forEach(product => {
+      const $product = $(product);
+      const imageUrl = $product.find('img').attr('src');
+      const productName = $product.find('h3').text();
+      const productPrice = $product.find('.price').text();
+      const productColor = $product.find('.color').text();
+      const productId = $product.data('product-id');
+
+      // Vérifiez que l'URL de l'image est valide
+      if (imageUrl) {
         $recommendedProducts.append(`
           <div class="col-12 col-md-6 col-lg-4">
-            <div class="product-item">
-              <img src="${$product.find('img').attr('src')}" alt="${$product.find('h3').text()}" class="img-fluid">
-              <h3>${$product.find('h3').text()}</h3>
-              <div class="price">${$product.find('.price').text()}</div>
-              <div class="color">${$product.find('.color').text()}</div>
+            <div class="product-item recommended-product" data-product-id="${productId}">
+              <img src="${imageUrl}" alt="${productName}" class="img-fluid">
+              <h3>${productName}</h3>
+              <div class="price">${productPrice}</div>
+              <div class="color">${productColor}</div>
             </div>
           </div>
         `);
-      });
-    }
+      } else {
+        console.warn("Image URL is missing for recommended product:", productName);
+      }
+    });
+
+    // Ajouter un gestionnaire d'événements pour les produits recommandés
+    $('.recommended-product').on('click', function () {
+      const recommendedProductId = $(this).data('product-id');
+      loadProductDetails(recommendedProductId);
+    });
+  }
 
     showPage(1); 
     generatePagination(); 
     updatePagination(1); 
   });
 </script>
-{% endblock javascripts %} 
+<script>
+  $(document).ready(function () {
+    $('.increment').on('click', function () {
+      let $quantity = $(this).siblings('.quantity');
+      let currentValue = parseInt($quantity.text());
+      $quantity.text(currentValue + 1);
+    });
+
+    $('.decrement').on('click', function () {
+      let $quantity = $(this).siblings('.quantity');
+      let currentValue = parseInt($quantity.text());
+      if (currentValue > 1) {
+        $quantity.text(currentValue - 1);
+      }
+    });
+  });
+</script>
+
+{% endblock javascripts %}
