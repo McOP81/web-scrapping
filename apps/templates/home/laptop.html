@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+{% block title %} Laptops {% endblock title %}
+
+{% block content %}
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--6">
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="mb-0">Laptops</h3>
+    </div>
+    <div class="card-body">
+      <div id="items-container" class="product-list">
+        {% for laptop in laptops %}
+        <div class="product-item item" data-product-id="{{ laptop.id }}">
+          <img src="{{ laptop.image_url }}" alt="{{ laptop.produit }}">
+          <h3>{{ laptop.produit }}</h3>
+          <p>{{ laptop.caracteristiques.Brand }}</p>
+          <div class="price">{{ laptop.prix }}</div>
+          <div class="color">{{ laptop.caracteristiques.Color }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <nav aria-label="Page navigation">
+        <ul id="pagination" class="pagination justify-content-center mt-4">
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+{% endblock content %}
